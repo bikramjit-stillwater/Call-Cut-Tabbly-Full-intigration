@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Calling Dashboard</title>
+    <style>
+        body { margin: 0; font-family: Arial; display: flex; }
+        .sidebar {
+            width: 220px;
+            background: #111;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+        .sidebar div {
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h3>Dashboard</h3>
+    <div onclick="loadPage('logs')">📞 Call Logs</div>
+    <div onclick="loadPage('campaign')">📢 Create Campaign</div>
+</div>
+
+<div class="content" id="content">
+    <h2>Welcome 🚀</h2>
+</div>
+
+<script>
+
+function loadPage(page) {
+    if (page === "logs") loadLogsUI();
+    if (page === "campaign") loadCampaignUI();
+}
+
+// -------- CALL LOGS --------
+function loadLogsUI() {
+    document.getElementById("content").innerHTML = `
+        <h2>Call Logs</h2>
+        <button onclick="fetchLogs()">Load Logs</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="logs"></tbody>
+        </table>
+    `;
+}
+
+async function fetchLogs() {
+    const res = await fetch("/call-logs");
+    const data = await res.json();
+
+    let rows = "";
+    (data.data || []).forEach(call => {
+        rows += `
+        <tr>
+            <td>${call.called_to}</td>
+            <td>${call.call_status}</td>
+            <td>${call.call_duration}s</td>
+            <td>${call.called_time}</td>
+        </tr>`;
+    });
+
+    document.getElementById("logs").innerHTML = rows;
+}
+
+
+// -------- CREATE CAMPAIGN --------
+function loadCampaignUI() {
+    document.getElementById("content").innerHTML = `
+        <h2>Create Campaign</h2>
+        <input id="name" placeholder="Campaign Name"><br><br>
+        <input id="agent" placeholder="Agent ID"><br><br>
+        <input id="start" placeholder="Start Time (HH:MM)"><br><br>
+        <input id="end" placeholder="End Time (HH:MM)"><br><br>
+        <button onclick="createCampaign()">Create</button>
+        <p id="result"></p>
+    `;
+}
+
+async function createCampaign() {
+    const res = await fetch("/create-campaign", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            campaign_name: name.value,
+            agent_id: agent.value,
+            start_time: start.value,
+            end_time: end.value
+        })
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = JSON.stringify(data);
+}
+
+</script>
+
+</body>
+</html>
