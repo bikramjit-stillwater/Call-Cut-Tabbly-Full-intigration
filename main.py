@@ -39,7 +39,7 @@ class CallRequest(BaseModel):
 def get_custom_first_line(name: str) -> str:
     clean_name = str(name).strip()
     return (
-        f"Hellooo {clean_name}
+        f"Hellooo {clean_name}"
     )
 
 
