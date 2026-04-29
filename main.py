@@ -22,9 +22,9 @@ app.add_middleware(
 TABBLY_API_KEY = os.getenv("API_KEY")
 TABBLY_ORG_ID = os.getenv("ORG_ID")
 
-AGENT_ID = 5565
-CAMPAIGN_ID = 2301
-AGENT_NAME = "Amar Eye Yoga"
+AGENT_ID = 5566
+CAMPAIGN_ID = 2302
+AGENT_NAME = "Call & Cut"
 
 BATCH_SIZE = 25
 TABBLY_TIMEOUT = 120
@@ -39,8 +39,7 @@ class CallRequest(BaseModel):
 def get_custom_first_line(name: str) -> str:
     clean_name = str(name).strip()
     return (
-        f"Hello {clean_name}, I’m calling from Amar Eye Yoga. "
-        f"Thank you for connecting with us. Could you please tell me more about your eye problem?"
+        f"Hellooo {clean_name}
     )
 
 
